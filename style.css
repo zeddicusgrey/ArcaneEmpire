@@ -1,0 +1,13 @@
+body { font-family: Arial, sans-serif; background:#1a1a2e;color:#fff; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;}
+.container{ text-align:center; width:95%; max-width:600px;}
+.wizard-icon{width:150px;margin-bottom:20px;}
+button{padding:10px 20px;background-color:#6a0dad;color:#fff;border:none;border-radius:8px;margin-top:5px;cursor:pointer;}
+button:hover{background-color:#9b30ff;}
+input{padding:8px;margin:5px 0;border-radius:6px;border:none;width:90%;}
+.hidden{display:none;}
+ul{list-style:none;padding:0;}
+ul li{background-color:#2e2e50;margin:5px 0;padding:8px;border-radius:5px;}
+.tabs{margin:15px 0;}
+.tabContent{margin-top:10px;}
+.stats p{margin:5px;}
+#worldChat, #privateChat, #forumList{height:120px; overflow-y:auto; background:#222242; padding:5px; margin-bottom:5px;}
