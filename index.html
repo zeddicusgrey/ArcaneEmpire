@@ -5,113 +5,86 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arcane Empire</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-
 <div class="container">
-  <!-- Wizard icon -->
   <img src="https://i.imgur.com/5cX2sBz.png" alt="Wizard Icon" class="wizard-icon">
 
   <button id="startGameBtn">Start Game</button>
 
-  <!-- Login form -->
+  <!-- Login/Register -->
   <div id="loginForm" class="hidden">
     <input type="text" id="username" placeholder="Enter username">
     <input type="password" id="password" placeholder="Enter password">
     <button id="loginBtn">Login / Register</button>
   </div>
 
-  <!-- Main Dashboard -->
+  <!-- Player / Game UI -->
   <div id="gameUI" class="hidden">
-
-    <div class="stats">
+    <div class="player-profile">
+      <img id="playerAvatar" src="https://i.imgur.com/3vT7sFq.png" alt="Player Avatar">
+      <p id="playerName">Player: </p>
       <p>Gold: <span id="goldCount">0</span></p>
       <p>Diamonds: <span id="diamondCount">0</span></p>
       <p>Valor Points: <span id="valorCount">0</span></p>
     </div>
 
-    <!-- Navigation Tabs -->
     <div class="tabs">
       <button class="tabBtn" data-tab="guildsTab">Guilds</button>
       <button class="tabBtn" data-tab="tasksTab">Daily Tasks</button>
       <button class="tabBtn" data-tab="arenaTab">Arena/Boss</button>
       <button class="tabBtn" data-tab="raidTab">Raids</button>
-      <button class="tabBtn" data-tab="dungeonTab">Colosseum/Dungeon</button>
+      <button class="tabBtn" data-tab="dungeonTab">Dungeon</button>
       <button class="tabBtn" data-tab="storeTab">Store</button>
       <button class="tabBtn" data-tab="chatTab">World Chat</button>
       <button class="tabBtn" data-tab="privateChatTab">Private Chat</button>
       <button class="tabBtn" data-tab="forumTab">Forum</button>
       <button class="tabBtn" data-tab="leaderboardTab">Leaderboards</button>
       <button class="tabBtn" data-tab="scheduledTab">Scheduled Battles</button>
+      <button class="tabBtn" data-tab="adminTab" id="adminTabBtn">Admin</button>
     </div>
 
     <!-- Sections -->
-    <div id="guildsTab" class="tabContent hidden">
-      <h2>Guilds / Clans</h2>
-      <ul id="guildList"></ul>
+    <div id="guildsTab" class="tabContent hidden"><h2>Guilds / Clans</h2><ul id="guildList"></ul></div>
+    <div id="tasksTab" class="tabContent hidden"><h2>Daily Tasks / Training</h2><ul id="taskList"></ul></div>
+    <div id="arenaTab" class="tabContent hidden"><h2>Boss / Arena Matches</h2><ul id="arenaList"></ul></div>
+    <div id="raidTab" class="tabContent hidden"><h2>Raid Battles</h2><ul id="raidList"></ul></div>
+    <div id="dungeonTab" class="tabContent hidden"><h2>Colosseum / Dungeon</h2><ul id="dungeonList"></ul></div>
+    <div id="storeTab" class="tabContent hidden"><h2>Store</h2>
+      <h3>Weapons</h3><ul id="weaponShop"></ul>
+      <h3>Amulets</h3><ul id="amuletShop"></ul>
+      <h3>Potions</h3><ul id="potionShop"></ul>
     </div>
-
-    <div id="tasksTab" class="tabContent hidden">
-      <h2>Daily Tasks / Training</h2>
-      <ul id="taskList"></ul>
-    </div>
-
-    <div id="arenaTab" class="tabContent hidden">
-      <h2>Boss / Arena Matches</h2>
-      <ul id="arenaList"></ul>
-    </div>
-
-    <div id="raidTab" class="tabContent hidden">
-      <h2>Raid Battles</h2>
-      <ul id="raidList"></ul>
-    </div>
-
-    <div id="dungeonTab" class="tabContent hidden">
-      <h2>Colosseum / Dungeon</h2>
-      <ul id="dungeonList"></ul>
-    </div>
-
-    <div id="storeTab" class="tabContent hidden">
-      <h2>Store</h2>
-      <h3>Weapon Shop</h3><ul id="weaponShop"></ul>
-      <h3>Amulet Shop</h3><ul id="amuletShop"></ul>
-      <h3>Potion Shop</h3><ul id="potionShop"></ul>
-    </div>
-
-    <div id="chatTab" class="tabContent hidden">
-      <h2>World Chat</h2>
+    <div id="chatTab" class="tabContent hidden"><h2>World Chat</h2>
       <div id="worldChat"></div>
-      <input type="text" id="worldMessage" placeholder="Type a message">
+      <input type="text" id="worldMessage" placeholder="Type message">
       <button id="sendWorldMsg">Send</button>
     </div>
-
-    <div id="privateChatTab" class="tabContent hidden">
-      <h2>Private Chat</h2>
+    <div id="privateChatTab" class="tabContent hidden"><h2>Private Chat</h2>
       <div id="privateChat"></div>
       <input type="text" id="privateMessage" placeholder="Send private message">
       <button id="sendPrivateMsg">Send</button>
     </div>
-
-    <div id="forumTab" class="tabContent hidden">
-      <h2>Forum</h2>
+    <div id="forumTab" class="tabContent hidden"><h2>Forum</h2>
       <div id="forumList"></div>
       <input type="text" id="forumPost" placeholder="Write a post">
       <button id="postForum">Post</button>
     </div>
-
-    <div id="leaderboardTab" class="tabContent hidden">
-      <h2>Leaderboards</h2>
+    <div id="leaderboardTab" class="tabContent hidden"><h2>Leaderboards</h2>
       <ul id="arenaLeaderboard"></ul>
       <ul id="strengthLeaderboard"></ul>
       <ul id="dungeonLeaderboard"></ul>
       <ul id="valorLeaderboard"></ul>
     </div>
-
-    <div id="scheduledTab" class="tabContent hidden">
-      <h2>Scheduled Battles</h2>
+    <div id="scheduledTab" class="tabContent hidden"><h2>Scheduled Battles</h2>
       <ul id="scheduledList"></ul>
     </div>
-
+    <div id="adminTab" class="tabContent hidden"><h2>Admin Dashboard</h2>
+      <div id="adminControls"></div>
+    </div>
   </div>
 </div>
 
