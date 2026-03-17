@@ -1,144 +1,222 @@
-// DOM elements
-const startGameBtn = document.getElementById('startGameBtn');
-const loginForm = document.getElementById('loginForm');
-const loginBtn = document.getElementById('loginBtn');
-const gameUI = document.getElementById('gameUI');
+// ===== FIREBASE CONFIG =====
+const firebaseConfig = {
+  apiKey: "AIzaSyAM8jDGhoaPZF3BieIKkMuJtd64PXPOsxw",
+  authDomain: "arcaneempire-31.firebaseapp.com",
+  databaseURL: "https://arcaneempire-31-default-rtdb.firebaseio.com",
+  projectId: "arcaneempire-31",
+  storageBucket: "arcaneempire-31.firebasestorage.app",
+  messagingSenderId: "92082426208",
+  appId: "1:92082426208:web:be6e451895cc21a04f8e05"
+};
 
-const goldCount = document.getElementById('goldCount');
-const diamondCount = document.getElementById('diamondCount');
-const valorCount = document.getElementById('valorCount');
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-const tabButtons = document.querySelectorAll('.tabBtn');
-const tabContents = document.querySelectorAll('.tabContent');
+// ===== GLOBAL =====
+let currentUser = null;
+let isAdmin = false;
 
-// Guilds
-const guildList = document.getElementById('guildList');
-const guilds = ['St Anthony','St Paul','St John','St Monica','St Augustine','CAS','St Luke','St Mary'];
+// ===== START =====
+document.getElementById("startGameBtn").onclick = () => {
+  document.getElementById("loginForm").classList.remove("hidden");
+  document.getElementById("startGameBtn").style.display = "none";
+};
 
-// Tasks
-const taskList = document.getElementById('taskList');
-const tasks = [{name:'Daily Quest',reward:10},{name:'Training',reward:5}];
+// ===== LOGIN =====
+document.getElementById("loginBtn").onclick = () => {
+  const username = document.getElementById("username").value.trim();
+  if (!username) return alert("Enter username");
 
-// Arena/Boss
-const arenaList = document.getElementById('arenaList');
-const arenas = ['Goblin Boss','Dragon Arena','Dark Wizard'];
+  currentUser = username;
+  isAdmin = username.toLowerCase() === "owner";
 
-// Raid
-const raidList = document.getElementById('raidList');
-const raids = ['Forest Raid','Mountain Raid'];
+  db.ref("players/" + username).once("value").then(snap => {
+    if (!snap.exists()) {
+      db.ref("players/" + username).set({
+        gold: 100,
+        diamonds: 10,
+        valor: 0,
+        inventory: []
+      });
+    }
+    loadPlayer();
+    openGame();
+  });
+};
 
-// Dungeon
-const dungeonList = document.getElementById('dungeonList');
-const dungeons = ['Colosseum','Ancient Dungeon'];
+// ===== OPEN GAME =====
+function openGame() {
+  document.getElementById("loginForm").classList.add("hidden");
+  document.getElementById("gameUI").classList.remove("hidden");
 
-// Store
-const weaponShop = document.getElementById('weaponShop');
-const amuletShop = document.getElementById('amuletShop');
-const potionShop = document.getElementById('potionShop');
-const weapons = ['Sword','Axe','Bow'];
-const amulets = ['Amulet of Strength','Amulet of Wisdom'];
-const potions = ['Health Potion','Mana Potion'];
+  if (!isAdmin) document.getElementById("adminTabBtn").style.display = "none";
 
-// Chat & Forum
-const worldChat = document.getElementById('worldChat');
-const privateChat = document.getElementById('privateChat');
-const forumList = document.getElementById('forumList');
-
-// Leaderboards
-const arenaLeaderboard = document.getElementById('arenaLeaderboard');
-const strengthLeaderboard = document.getElementById('strengthLeaderboard');
-const dungeonLeaderboard = document.getElementById('dungeonLeaderboard');
-const valorLeaderboard = document.getElementById('valorLeaderboard');
-
-// Scheduled
-const scheduledList = document.getElementById('scheduledList');
-const scheduledBattles = ['Dragon Raid - 6PM','Arena Battle - 8PM'];
-
-// Player stats
-let gold=0, diamonds=0, valor=0;
-
-// Show login form
-startGameBtn.addEventListener('click',()=>{
-    startGameBtn.style.display='none';
-    loginForm.classList.remove('hidden');
-});
-
-// Login/Register
-loginBtn.addEventListener('click',()=>{
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    if(username && password){
-        alert(`Welcome ${username}!`);
-        loginForm.classList.add('hidden');
-        gameUI.classList.remove('hidden');
-        loadGame();
-    } else alert('Enter username & password');
-});
-
-// Tab navigation
-tabButtons.forEach(btn=>{
-    btn.addEventListener('click',()=>{
-        tabContents.forEach(c=>c.classList.add('hidden'));
-        document.getElementById(btn.dataset.tab).classList.remove('hidden');
-    });
-});
-
-// Load all sections
-function loadGame(){
-    // Guilds
-    guildList.innerHTML='';
-    guilds.forEach(g=>{
-        const li=document.createElement('li');
-        li.textContent=g;
-        guildList.appendChild(li);
-    });
-    // Tasks
-    taskList.innerHTML='';
-    tasks.forEach(t=>{
-        const li=document.createElement('li');
-        li.textContent=`${t.name} (+${t.reward} gold)`;
-        li.addEventListener('click',()=>completeTask(t));
-        taskList.appendChild(li);
-    });
-    // Arena
-    arenaList.innerHTML='';
-    arenas.forEach(a=>{
-        const li=document.createElement('li');
-        li.textContent=a;
-        li.addEventListener('click',()=>completeArena(a));
-        arenaList.appendChild(li);
-    });
-    // Raids
-    raidList.innerHTML='';
-    raids.forEach(r=>{
-        const li=document.createElement('li');
-        li.textContent=r;
-        li.addEventListener('click',()=>completeRaid(r));
-        raidList.appendChild(li);
-    });
-    // Dungeons
-    dungeonList.innerHTML='';
-    dungeons.forEach(d=>{
-        const li=document.createElement('li');
-        li.textContent=d;
-        li.addEventListener('click',()=>completeDungeon(d));
-        dungeonList.appendChild(li);
-    });
-    // Store
-    weaponShop.innerHTML=''; weapons.forEach(i=>{const li=document.createElement('li');li.textContent=i;weaponShop.appendChild(li);});
-    amuletShop.innerHTML=''; amulets.forEach(i=>{const li=document.createElement('li');li.textContent=i;amuletShop.appendChild(li);});
-    potionShop.innerHTML=''; potions.forEach(i=>{const li=document.createElement('li');li.textContent=i;potionShop.appendChild(li);});
-    // Scheduled
-    scheduledList.innerHTML=''; scheduledBattles.forEach(b=>{const li=document.createElement('li');li.textContent=b;scheduledList.appendChild(li);});
-    // Leaderboards (placeholder)
-    arenaLeaderboard.innerHTML='<li>Arena Leaderboard Placeholder</li>';
-    strengthLeaderboard.innerHTML='<li>Strength Leaderboard Placeholder</li>';
-    dungeonLeaderboard.innerHTML='<li>Dungeon Leaderboard Placeholder</li>';
-    valorLeaderboard.innerHTML='<li>Valor Points Leaderboard Placeholder</li>';
+  setupTabs();
+  loadAllSystems();
 }
 
-// Task completion
-function completeTask(t){ gold+=t.reward; valor+=Math.floor(t.reward/2); goldCount.textContent=gold; valorCount.textContent=valor; alert(`Completed "${t.name}" +${t.reward} gold +${Math.floor(t.reward/2)} valor`);}
-function completeArena(a){ gold+=20; valor+=10; goldCount.textContent=gold; valorCount.textContent=valor; alert(`Won Arena: "${a}" +20 gold +10 valor`);}
-function completeRaid(r){ gold+=30; diamonds+=10; goldCount.textContent=gold; diamondCount.textContent=diamonds; alert(`Completed Raid: "${r}" +30 gold +10 diamonds`);}
-function completeDungeon(d){ gold+=40; valor+=20; goldCount.textContent=gold; valorCount.textContent=valor; alert(`Completed Dungeon: "${d}" +40 gold +20 valor`);}
+// ===== PLAYER =====
+function loadPlayer() {
+  db.ref("players/" + currentUser).on("value", snap => {
+    const d = snap.val();
+    document.getElementById("playerName").innerText = currentUser;
+    document.getElementById("goldCount").innerText = d.gold;
+    document.getElementById("diamondCount").innerText = d.diamonds;
+    document.getElementById("valorCount").innerText = d.valor;
+
+    loadInventory(d.inventory || []);
+  });
+}
+
+// ===== TABS =====
+function setupTabs() {
+  document.querySelectorAll(".tabBtn").forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll(".tabContent").forEach(c => c.classList.add("hidden"));
+      document.getElementById(btn.dataset.tab).classList.remove("hidden");
+    };
+  });
+}
+
+// ===== GAME SYSTEMS =====
+function loadAllSystems() {
+
+  // TASKS
+  document.getElementById("taskList").innerHTML = `
+    <li onclick="addValor(10)">Training (+10 Valor)</li>
+    <li onclick="addGold(50)">Daily Boss (+50 Gold)</li>
+  `;
+
+  // BOSSES
+  document.getElementById("arenaList").innerHTML = `
+    <li onclick="addGold(20)">👹 Goblin King</li>
+    <li onclick="addGold(100)">🐉 Dragon Lord</li>
+  `;
+
+  // RAID
+  document.getElementById("raidList").innerHTML = `
+    <li onclick="addGold(70)">🔥 Fire Raid</li>
+  `;
+
+  // DUNGEON
+  document.getElementById("dungeonList").innerHTML = `
+    <li onclick="addValor(40)">🏟 Colosseum</li>
+  `;
+
+  // STORE
+  document.getElementById("weaponShop").innerHTML = `
+    <li onclick="buyItem('Sword',50)">⚔ Sword - 50 Gold</li>
+  `;
+  document.getElementById("amuletShop").innerHTML = `
+    <li onclick="buyItem('Amulet',30)">🔮 Amulet - 30 Gold</li>
+  `;
+  document.getElementById("potionShop").innerHTML = `
+    <li onclick="buyItem('Potion',10)">🧪 Potion - 10 Gold</li>
+  `;
+
+  // GUILDS
+  document.getElementById("guildList").innerHTML = `
+    <li>⚔ Warriors</li>
+    <li>🧙 Mages</li>
+  `;
+
+  loadChat();
+  loadForum();
+  loadLeaderboard();
+  if (isAdmin) loadAdmin();
+}
+
+// ===== GAME ACTIONS =====
+function addGold(amount) {
+  updatePlayer(data => data.gold += amount);
+}
+
+function addValor(amount) {
+  updatePlayer(data => data.valor += amount);
+}
+
+function buyItem(name, cost) {
+  updatePlayer(data => {
+    if (data.gold < cost) {
+      alert("Not enough gold");
+      return;
+    }
+    data.gold -= cost;
+    data.inventory.push(name);
+  });
+}
+
+function updatePlayer(callback) {
+  const ref = db.ref("players/" + currentUser);
+  ref.once("value").then(snap => {
+    let data = snap.val();
+    callback(data);
+    ref.set(data);
+  });
+}
+
+// ===== INVENTORY =====
+function loadInventory(items) {
+  let html = "<h3>Inventory</h3>";
+  items.forEach(i => html += `<p>${i}</p>`);
+  document.getElementById("playerName").innerHTML = currentUser + html;
+}
+
+// ===== CHAT =====
+function loadChat() {
+  const box = document.getElementById("worldChat");
+  db.ref("worldChat").on("child_added", snap => {
+    const m = snap.val();
+    box.innerHTML += `<p>${m.user}: ${m.message}</p>`;
+  });
+
+  document.getElementById("sendWorldMsg").onclick = () => {
+    const msg = document.getElementById("worldMessage").value;
+    if (!msg) return;
+    db.ref("worldChat").push({user: currentUser, message: msg});
+    document.getElementById("worldMessage").value = "";
+  };
+}
+
+// ===== FORUM =====
+function loadForum() {
+  const box = document.getElementById("forumList");
+
+  db.ref("forum").on("child_added", snap => {
+    const m = snap.val();
+    box.innerHTML += `<p>${m.user}: ${m.message}</p>`;
+  });
+
+  document.getElementById("postForum").onclick = () => {
+    const msg = document.getElementById("forumPost").value;
+    if (!msg) return;
+    db.ref("forum").push({user: currentUser, message: msg});
+  };
+}
+
+// ===== LEADERBOARD =====
+function loadLeaderboard() {
+  const list = document.getElementById("arenaLeaderboard");
+
+  db.ref("players").on("value", snap => {
+    let players = [];
+    snap.forEach(c => players.push({name:c.key,...c.val()}));
+
+    players.sort((a,b)=>b.valor-a.valor);
+
+    list.innerHTML = players.map(p=>`<li>${p.name} - ${p.valor}</li>`).join("");
+  });
+}
+
+// ===== ADMIN =====
+function loadAdmin() {
+  const box = document.getElementById("adminControls");
+
+  db.ref("players").on("value", snap => {
+    box.innerHTML = "<h3>All Players</h3>";
+    snap.forEach(c=>{
+      let d=c.val();
+      box.innerHTML += `<p>${c.key} | Gold:${d.gold} | Valor:${d.valor}</p>`;
+    });
+  });
+      }
