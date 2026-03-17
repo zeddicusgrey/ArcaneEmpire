@@ -1,117 +1,144 @@
-const socket = io();
-let myId = null;
-let skillReady = true;
-let users = {};
+// DOM elements
+const startGameBtn = document.getElementById('startGameBtn');
+const loginForm = document.getElementById('loginForm');
+const loginBtn = document.getElementById('loginBtn');
+const gameUI = document.getElementById('gameUI');
 
-function startGame(){
-  let username = document.getElementById("name").value;
-  if(!username) username = "Guest"+Math.floor(Math.random()*1000);
-  const playerClass = document.getElementById("class").value;
-  const guild = document.getElementById("guildName").value || null;
+const goldCount = document.getElementById('goldCount');
+const diamondCount = document.getElementById('diamondCount');
+const valorCount = document.getElementById('valorCount');
 
-  socket.emit("join",{username,playerClass,guild});
-  document.getElementById("game").style.display="block";
+const tabButtons = document.querySelectorAll('.tabBtn');
+const tabContents = document.querySelectorAll('.tabContent');
 
-  setTimeout(()=>{document.getElementById("save-popup").style.display="block";},5000);
-}
+// Guilds
+const guildList = document.getElementById('guildList');
+const guilds = ['St Anthony','St Paul','St John','St Monica','St Augustine','CAS','St Luke','St Mary'];
 
-function closeSavePopup(){
-  document.getElementById("save-popup").style.display="none";
-  alert("✅ Account saved and 50 gold added!");
-}
+// Tasks
+const taskList = document.getElementById('taskList');
+const tasks = [{name:'Daily Quest',reward:10},{name:'Training',reward:5}];
 
-function register(){
-  const username=document.getElementById("name").value;
-  const password=document.getElementById("password").value;
-  if(!username||!password) return alert("Enter username & password");
-  if(users[username]) return alert("Username exists!");
-  users[username]={password};
-  alert("✅ Registered!");
-}
+// Arena/Boss
+const arenaList = document.getElementById('arenaList');
+const arenas = ['Goblin Boss','Dragon Arena','Dark Wizard'];
 
-function login(){
-  const username=document.getElementById("name").value;
-  const password=document.getElementById("password").value;
-  if(!username||!password) return alert("Enter username & password");
-  if(!users[username]) return alert("User not found");
-  if(users[username].password!==password) return alert("Incorrect password");
-  const playerClass=document.getElementById("class").value;
-  const guild=document.getElementById("guildName").value||null;
-  socket.emit("join",{username,playerClass,guild});
-  document.getElementById("game").style.display="block";
-  alert("✅ Logged in!");
-}
+// Raid
+const raidList = document.getElementById('raidList');
+const raids = ['Forest Raid','Mountain Raid'];
 
-function attack(id){socket.emit("attack",id);}
-function skillCooldown(){
-  if(!skillReady)return;
-  const target=document.querySelector(".target");
-  if(!target)return;
-  skillReady=false;
-  socket.emit("skill",target.dataset.id);
-  document.getElementById("skillBtn").disabled=true;
-  setTimeout(()=>{skillReady=true;document.getElementById("skillBtn").disabled=false;},5000);
-}
+// Dungeon
+const dungeonList = document.getElementById('dungeonList');
+const dungeons = ['Colosseum','Ancient Dungeon'];
 
-socket.on("update",({players,guilds,damage,targetId})=>{
-  renderPlayers(players);
-  updateLeaderboard(players);
-  renderGuilds(guilds);
-  renderTasks(players);
-  if(damage&&targetId) showDamage(targetId,damage);
+// Store
+const weaponShop = document.getElementById('weaponShop');
+const amuletShop = document.getElementById('amuletShop');
+const potionShop = document.getElementById('potionShop');
+const weapons = ['Sword','Axe','Bow'];
+const amulets = ['Amulet of Strength','Amulet of Wisdom'];
+const potions = ['Health Potion','Mana Potion'];
+
+// Chat & Forum
+const worldChat = document.getElementById('worldChat');
+const privateChat = document.getElementById('privateChat');
+const forumList = document.getElementById('forumList');
+
+// Leaderboards
+const arenaLeaderboard = document.getElementById('arenaLeaderboard');
+const strengthLeaderboard = document.getElementById('strengthLeaderboard');
+const dungeonLeaderboard = document.getElementById('dungeonLeaderboard');
+const valorLeaderboard = document.getElementById('valorLeaderboard');
+
+// Scheduled
+const scheduledList = document.getElementById('scheduledList');
+const scheduledBattles = ['Dragon Raid - 6PM','Arena Battle - 8PM'];
+
+// Player stats
+let gold=0, diamonds=0, valor=0;
+
+// Show login form
+startGameBtn.addEventListener('click',()=>{
+    startGameBtn.style.display='none';
+    loginForm.classList.remove('hidden');
 });
 
-function renderPlayers(players){
-  const div=document.getElementById("players");
-  div.innerHTML="";
-  myId=Object.keys(players).find(id=>players[id].username===document.getElementById("name").value||id.startsWith("Guest"));
-  for(let id in players){
-    const p=players[id];
-    let percent=(p.hp/p.maxHp)*100;
-    div.innerHTML+=`
-    <div class="player ${id!==myId?"target":""}" data-id="${id}">
-      <b>${p.username}</b> (${p.class})<br>
-      <div class="hpbar" style="width:${percent}%"></div>
-      💰 ${p.gold} | 💎 ${p.diamonds}<br>
-      🎒 ${p.inventory? p.inventory.join(","):""}<br>
-      ${id!==myId? `<button onclick="attack('${id}')">Attack</button>`:"<i>You</i>"}
-    </div>`;
-  }
+// Login/Register
+loginBtn.addEventListener('click',()=>{
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    if(username && password){
+        alert(`Welcome ${username}!`);
+        loginForm.classList.add('hidden');
+        gameUI.classList.remove('hidden');
+        loadGame();
+    } else alert('Enter username & password');
+});
+
+// Tab navigation
+tabButtons.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        tabContents.forEach(c=>c.classList.add('hidden'));
+        document.getElementById(btn.dataset.tab).classList.remove('hidden');
+    });
+});
+
+// Load all sections
+function loadGame(){
+    // Guilds
+    guildList.innerHTML='';
+    guilds.forEach(g=>{
+        const li=document.createElement('li');
+        li.textContent=g;
+        guildList.appendChild(li);
+    });
+    // Tasks
+    taskList.innerHTML='';
+    tasks.forEach(t=>{
+        const li=document.createElement('li');
+        li.textContent=`${t.name} (+${t.reward} gold)`;
+        li.addEventListener('click',()=>completeTask(t));
+        taskList.appendChild(li);
+    });
+    // Arena
+    arenaList.innerHTML='';
+    arenas.forEach(a=>{
+        const li=document.createElement('li');
+        li.textContent=a;
+        li.addEventListener('click',()=>completeArena(a));
+        arenaList.appendChild(li);
+    });
+    // Raids
+    raidList.innerHTML='';
+    raids.forEach(r=>{
+        const li=document.createElement('li');
+        li.textContent=r;
+        li.addEventListener('click',()=>completeRaid(r));
+        raidList.appendChild(li);
+    });
+    // Dungeons
+    dungeonList.innerHTML='';
+    dungeons.forEach(d=>{
+        const li=document.createElement('li');
+        li.textContent=d;
+        li.addEventListener('click',()=>completeDungeon(d));
+        dungeonList.appendChild(li);
+    });
+    // Store
+    weaponShop.innerHTML=''; weapons.forEach(i=>{const li=document.createElement('li');li.textContent=i;weaponShop.appendChild(li);});
+    amuletShop.innerHTML=''; amulets.forEach(i=>{const li=document.createElement('li');li.textContent=i;amuletShop.appendChild(li);});
+    potionShop.innerHTML=''; potions.forEach(i=>{const li=document.createElement('li');li.textContent=i;potionShop.appendChild(li);});
+    // Scheduled
+    scheduledList.innerHTML=''; scheduledBattles.forEach(b=>{const li=document.createElement('li');li.textContent=b;scheduledList.appendChild(li);});
+    // Leaderboards (placeholder)
+    arenaLeaderboard.innerHTML='<li>Arena Leaderboard Placeholder</li>';
+    strengthLeaderboard.innerHTML='<li>Strength Leaderboard Placeholder</li>';
+    dungeonLeaderboard.innerHTML='<li>Dungeon Leaderboard Placeholder</li>';
+    valorLeaderboard.innerHTML='<li>Valor Points Leaderboard Placeholder</li>';
 }
 
-function showDamage(id,dmg){
-  const el=document.querySelector(`[data-id='${id}']`);
-  if(!el) return;
-  const dmgEl=document.createElement("div");
-  dmgEl.className="damage";
-  dmgEl.innerText="-"+dmg;
-  el.appendChild(dmgEl);
-  setTimeout(()=>dmgEl.remove(),1000);
-}
-
-function updateLeaderboard(players){
-  const sorted=Object.values(players).sort((a,b)=>b.gold-a.gold);
-  document.getElementById("leaderboard").innerHTML=sorted.map(p=>`${p.username} - ${p.gold}`).join("<br>");
-}
-
-function renderGuilds(guilds){
-  const div=document.getElementById("guildList");
-  div.innerHTML="";
-  for(const g in guilds){
-    const members = guilds[g].members.length;
-    const diamonds = guilds[g].diamonds;
-    div.innerHTML+=`<b>${g}</b> - Members: ${members} | 💎 Diamonds: ${diamonds}<br>`;
-  }
-}
-
-function renderTasks(players){
-  const div=document.getElementById("taskList");
-  const player=players[myId];
-  if(!player) return;
-  div.innerHTML="";
-  player.tasks.forEach(t=>{
-    div.innerHTML+=`${t.task} <button onclick="completeTask(${t.id})">Complete</button><br>`;
-  });
-}
-
-function completeTask(taskId){ socket.emit("completeTask",taskId); }
+// Task completion
+function completeTask(t){ gold+=t.reward; valor+=Math.floor(t.reward/2); goldCount.textContent=gold; valorCount.textContent=valor; alert(`Completed "${t.name}" +${t.reward} gold +${Math.floor(t.reward/2)} valor`);}
+function completeArena(a){ gold+=20; valor+=10; goldCount.textContent=gold; valorCount.textContent=valor; alert(`Won Arena: "${a}" +20 gold +10 valor`);}
+function completeRaid(r){ gold+=30; diamonds+=10; goldCount.textContent=gold; diamondCount.textContent=diamonds; alert(`Completed Raid: "${r}" +30 gold +10 diamonds`);}
+function completeDungeon(d){ gold+=40; valor+=20; goldCount.textContent=gold; valorCount.textContent=valor; alert(`Completed Dungeon: "${d}" +40 gold +20 valor`);}
