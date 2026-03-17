@@ -1,88 +1,9 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #1b1b2f;
-    color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-}
-
-.container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
-    text-align: center;
-}
-
-.wizard-icon {
-    width: 120px;
-    margin-bottom: 10px;
-}
-
-button {
-    background-color: #4b4bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    margin: 5px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-button:hover {
-    background-color: #6c6cff;
-}
-
-input {
-    padding: 8px;
-    margin: 5px;
-    border-radius: 4px;
-    border: none;
-}
-
-.hidden { display: none; }
-
-.player-profile img {
-    width: 80px;
-    border-radius: 50%;
-}
-
-.tabs {
-    margin-top: 20px;
-}
-
-.tabContent {
-    margin-top: 15px;
-    background-color: #2b2b44;
-    padding: 10px;
-    border-radius: 5px;
-    text-align: left;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.tabContent ul {
-    list-style: none;
-    padding-left: 0;
-}
-
-.tabContent li {
-    margin: 5px 0;
-    padding: 5px;
-    background-color: #3b3b5a;
-    border-radius: 4px;
-}
-
-#worldChat, #privateChat, #forumList {
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid #555;
-    padding: 5px;
-    margin-bottom: 5px;
-    background-color: #1b1b3a;
-}
-
-#adminControls {
-    text-align: left;
-    max-height: 300px;
-    overflow-y: auto;
-  }
+body { font-family: Arial, sans-serif; background:#111; color:#eee; text-align:center; margin:0; padding:0; }
+.hidden { display:none; }
+#welcomeImage { width:80%; max-width:500px; margin:20px auto; }
+button { background:#5c4fff; color:white; border:none; padding:10px 20px; margin:5px; cursor:pointer; }
+button:hover { background:#8371ff; }
+#tabs { margin:10px 0; }
+.tabContent { border-top:1px solid #555; padding:10px; }
+input { padding:8px; margin:5px; width:200px; }
+#playerName h3, #playerInfo p { margin:5px; }
