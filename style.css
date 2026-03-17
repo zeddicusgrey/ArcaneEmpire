@@ -1,13 +1,88 @@
-body { font-family: Arial, sans-serif; background:#1a1a2e;color:#fff; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;}
-.container{ text-align:center; width:95%; max-width:600px;}
-.wizard-icon{width:150px;margin-bottom:20px;}
-button{padding:10px 20px;background-color:#6a0dad;color:#fff;border:none;border-radius:8px;margin-top:5px;cursor:pointer;}
-button:hover{background-color:#9b30ff;}
-input{padding:8px;margin:5px 0;border-radius:6px;border:none;width:90%;}
-.hidden{display:none;}
-ul{list-style:none;padding:0;}
-ul li{background-color:#2e2e50;margin:5px 0;padding:8px;border-radius:5px;}
-.tabs{margin:15px 0;}
-.tabContent{margin-top:10px;}
-.stats p{margin:5px;}
-#worldChat, #privateChat, #forumList{height:120px; overflow-y:auto; background:#222242; padding:5px; margin-bottom:5px;}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1b1b2f;
+    color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.wizard-icon {
+    width: 120px;
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #4b4bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #6c6cff;
+}
+
+input {
+    padding: 8px;
+    margin: 5px;
+    border-radius: 4px;
+    border: none;
+}
+
+.hidden { display: none; }
+
+.player-profile img {
+    width: 80px;
+    border-radius: 50%;
+}
+
+.tabs {
+    margin-top: 20px;
+}
+
+.tabContent {
+    margin-top: 15px;
+    background-color: #2b2b44;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.tabContent ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.tabContent li {
+    margin: 5px 0;
+    padding: 5px;
+    background-color: #3b3b5a;
+    border-radius: 4px;
+}
+
+#worldChat, #privateChat, #forumList {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #555;
+    padding: 5px;
+    margin-bottom: 5px;
+    background-color: #1b1b3a;
+}
+
+#adminControls {
+    text-align: left;
+    max-height: 300px;
+    overflow-y: auto;
+  }
