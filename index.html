@@ -1,57 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arcane Empire</title>
-<style>
-body{margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(#0b0b0b,#1a1a1a);color:#fff;text-align:center;}
-h2{margin:10px 0;}
-#wizard-icon{width:120px;margin:20px auto;animation:float 2s infinite ease-in-out;}
-@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-15px);}}
-#start-btn{font-size:22px;padding:15px 30px;background:linear-gradient(45deg,#ffcc00,#ff6600);border:none;border-radius:12px;color:#000;font-weight:bold;cursor:pointer;box-shadow:0 0 15px #ffcc00;margin:10px;}
-#start-btn:hover{box-shadow:0 0 30px #ffcc00;transform:scale(1.05);}
-input,select{padding:10px;margin:5px;border-radius:8px;border:none;font-size:16px;width:200px;color:black;}
-#game,#guildHub,#tasksPanel{display:none;margin-top:20px;}
-.player{background:#222;border:1px solid #444;border-radius:10px;padding:10px;margin:10px auto;width:260px;position:relative;}
-.hpbar{height:10px;background:red;margin:5px 0;border-radius:5px;}
-.damage{position:absolute;color: yellow;font-weight:bold;animation: floatDmg 1s ease-out;}
-@keyframes floatDmg{from{top:20px;opacity:1;}to{top:-10px;opacity:0;}}
-#skillBtn{margin:10px;padding:12px 20px;border:none;border-radius:10px;background:#ff4444;color:white;font-weight:bold;cursor:pointer;transition:0.3s;}
-#skillBtn:disabled{opacity:0.5;cursor:default;}
-#leaderboard,#guildList,#taskList{background:#111;border-radius:10px;padding:10px;width:250px;margin:10px auto;text-align:left;}
-#save-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#222;padding:20px;border-radius:15px;box-shadow:0 0 20px #ffcc00;z-index:100;}
-#save-popup button{margin-top:10px;padding:10px 20px;background:#ffcc00;border:none;border-radius:10px;cursor:pointer;font-weight:bold;}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h2>🧙 Arcane Empire</h2>
-<img id="wizard-icon" src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png">
-<button id="start-btn" onclick="startGame()">🎮 START GAME</button>
-<hr>
-<input id="name" placeholder="Username">
-<input id="password" type="password" placeholder="Password">
-<select id="class"><option>Mage</option><option>Knight</option><option>Assassin</option></select>
-<input id="guildName" placeholder="Guild (optional)">
-<br>
-<button onclick="register()">Register</button>
-<button onclick="login()">Login</button>
 
-<div id="game">
-<button id="skillBtn" onclick="skillCooldown()">🔥 Skill</button>
-<h3>🏆 Leaderboard</h3>
-<div id="leaderboard"></div>
-<h3>🛡️ Guild Hub</h3>
-<div id="guildHub"><div id="guildList"></div></div>
-<h3>🎯 Personal Tasks</h3>
-<div id="tasksPanel"><div id="taskList"></div></div>
-<div id="players"></div>
+<div class="container">
+  <!-- Wizard icon -->
+  <img src="https://i.imgur.com/5cX2sBz.png" alt="Wizard Icon" class="wizard-icon">
+
+  <button id="startGameBtn">Start Game</button>
+
+  <!-- Login form -->
+  <div id="loginForm" class="hidden">
+    <input type="text" id="username" placeholder="Enter username">
+    <input type="password" id="password" placeholder="Enter password">
+    <button id="loginBtn">Login / Register</button>
+  </div>
+
+  <!-- Main Dashboard -->
+  <div id="gameUI" class="hidden">
+
+    <div class="stats">
+      <p>Gold: <span id="goldCount">0</span></p>
+      <p>Diamonds: <span id="diamondCount">0</span></p>
+      <p>Valor Points: <span id="valorCount">0</span></p>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+      <button class="tabBtn" data-tab="guildsTab">Guilds</button>
+      <button class="tabBtn" data-tab="tasksTab">Daily Tasks</button>
+      <button class="tabBtn" data-tab="arenaTab">Arena/Boss</button>
+      <button class="tabBtn" data-tab="raidTab">Raids</button>
+      <button class="tabBtn" data-tab="dungeonTab">Colosseum/Dungeon</button>
+      <button class="tabBtn" data-tab="storeTab">Store</button>
+      <button class="tabBtn" data-tab="chatTab">World Chat</button>
+      <button class="tabBtn" data-tab="privateChatTab">Private Chat</button>
+      <button class="tabBtn" data-tab="forumTab">Forum</button>
+      <button class="tabBtn" data-tab="leaderboardTab">Leaderboards</button>
+      <button class="tabBtn" data-tab="scheduledTab">Scheduled Battles</button>
+    </div>
+
+    <!-- Sections -->
+    <div id="guildsTab" class="tabContent hidden">
+      <h2>Guilds / Clans</h2>
+      <ul id="guildList"></ul>
+    </div>
+
+    <div id="tasksTab" class="tabContent hidden">
+      <h2>Daily Tasks / Training</h2>
+      <ul id="taskList"></ul>
+    </div>
+
+    <div id="arenaTab" class="tabContent hidden">
+      <h2>Boss / Arena Matches</h2>
+      <ul id="arenaList"></ul>
+    </div>
+
+    <div id="raidTab" class="tabContent hidden">
+      <h2>Raid Battles</h2>
+      <ul id="raidList"></ul>
+    </div>
+
+    <div id="dungeonTab" class="tabContent hidden">
+      <h2>Colosseum / Dungeon</h2>
+      <ul id="dungeonList"></ul>
+    </div>
+
+    <div id="storeTab" class="tabContent hidden">
+      <h2>Store</h2>
+      <h3>Weapon Shop</h3><ul id="weaponShop"></ul>
+      <h3>Amulet Shop</h3><ul id="amuletShop"></ul>
+      <h3>Potion Shop</h3><ul id="potionShop"></ul>
+    </div>
+
+    <div id="chatTab" class="tabContent hidden">
+      <h2>World Chat</h2>
+      <div id="worldChat"></div>
+      <input type="text" id="worldMessage" placeholder="Type a message">
+      <button id="sendWorldMsg">Send</button>
+    </div>
+
+    <div id="privateChatTab" class="tabContent hidden">
+      <h2>Private Chat</h2>
+      <div id="privateChat"></div>
+      <input type="text" id="privateMessage" placeholder="Send private message">
+      <button id="sendPrivateMsg">Send</button>
+    </div>
+
+    <div id="forumTab" class="tabContent hidden">
+      <h2>Forum</h2>
+      <div id="forumList"></div>
+      <input type="text" id="forumPost" placeholder="Write a post">
+      <button id="postForum">Post</button>
+    </div>
+
+    <div id="leaderboardTab" class="tabContent hidden">
+      <h2>Leaderboards</h2>
+      <ul id="arenaLeaderboard"></ul>
+      <ul id="strengthLeaderboard"></ul>
+      <ul id="dungeonLeaderboard"></ul>
+      <ul id="valorLeaderboard"></ul>
+    </div>
+
+    <div id="scheduledTab" class="tabContent hidden">
+      <h2>Scheduled Battles</h2>
+      <ul id="scheduledList"></ul>
+    </div>
+
+  </div>
 </div>
 
-<div id="save-popup">
-<h3>💾 Save your account now and earn 50 gold!</h3>
-<button onclick="closeSavePopup()">Save</button>
-</div>
-
-<script src="/socket.io/socket.io.js"></script>
 <script src="script.js"></script>
 </body>
-</html>
+  </html>
