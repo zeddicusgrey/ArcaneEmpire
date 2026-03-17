@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Arcane Empire</title>
+<style>
+body{margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(#0b0b0b,#1a1a1a);color:#fff;text-align:center;}
+h2{margin:10px 0;}
+#wizard-icon{width:120px;margin:20px auto;animation:float 2s infinite ease-in-out;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-15px);}}
+#start-btn{font-size:22px;padding:15px 30px;background:linear-gradient(45deg,#ffcc00,#ff6600);border:none;border-radius:12px;color:#000;font-weight:bold;cursor:pointer;box-shadow:0 0 15px #ffcc00;margin:10px;}
+#start-btn:hover{box-shadow:0 0 30px #ffcc00;transform:scale(1.05);}
+input,select{padding:10px;margin:5px;border-radius:8px;border:none;font-size:16px;width:200px;color:black;}
+#game,#guildHub,#tasksPanel{display:none;margin-top:20px;}
+.player{background:#222;border:1px solid #444;border-radius:10px;padding:10px;margin:10px auto;width:260px;position:relative;}
+.hpbar{height:10px;background:red;margin:5px 0;border-radius:5px;}
+.damage{position:absolute;color: yellow;font-weight:bold;animation: floatDmg 1s ease-out;}
+@keyframes floatDmg{from{top:20px;opacity:1;}to{top:-10px;opacity:0;}}
+#skillBtn{margin:10px;padding:12px 20px;border:none;border-radius:10px;background:#ff4444;color:white;font-weight:bold;cursor:pointer;transition:0.3s;}
+#skillBtn:disabled{opacity:0.5;cursor:default;}
+#leaderboard,#guildList,#taskList{background:#111;border-radius:10px;padding:10px;width:250px;margin:10px auto;text-align:left;}
+#save-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#222;padding:20px;border-radius:15px;box-shadow:0 0 20px #ffcc00;z-index:100;}
+#save-popup button{margin-top:10px;padding:10px 20px;background:#ffcc00;border:none;border-radius:10px;cursor:pointer;font-weight:bold;}
+</style>
+</head>
+<body>
+<h2>🧙 Arcane Empire</h2>
+<img id="wizard-icon" src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png">
+<button id="start-btn" onclick="startGame()">🎮 START GAME</button>
+<hr>
+<input id="name" placeholder="Username">
+<input id="password" type="password" placeholder="Password">
+<select id="class"><option>Mage</option><option>Knight</option><option>Assassin</option></select>
+<input id="guildName" placeholder="Guild (optional)">
+<br>
+<button onclick="register()">Register</button>
+<button onclick="login()">Login</button>
+
+<div id="game">
+<button id="skillBtn" onclick="skillCooldown()">🔥 Skill</button>
+<h3>🏆 Leaderboard</h3>
+<div id="leaderboard"></div>
+<h3>🛡️ Guild Hub</h3>
+<div id="guildHub"><div id="guildList"></div></div>
+<h3>🎯 Personal Tasks</h3>
+<div id="tasksPanel"><div id="taskList"></div></div>
+<div id="players"></div>
+</div>
+
+<div id="save-popup">
+<h3>💾 Save your account now and earn 50 gold!</h3>
+<button onclick="closeSavePopup()">Save</button>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
