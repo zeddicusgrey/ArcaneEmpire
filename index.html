@@ -1,103 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Arcane Empire</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌌 Arcane Empire MMORPG</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="loginScreen">
-  <h1>Arcane Empire</h1>
-  <input type="text" id="username" placeholder="Username"><br>
-  <input type="password" id="password" placeholder="Password"><br>
+<!-- Login Panel -->
+<div id="loginPanel">
+  <h2>Login to Arcane Empire</h2>
+  <input type="text" id="username" placeholder="Enter your username">
   <button id="loginBtn">Enter World</button>
+  <div id="loginMsg"></div>
 </div>
 
-<!-- GAME -->
-<div id="gameUI" class="hidden">
+<!-- Main Game -->
+<div id="mainGame" style="display:none;">
+  <header>
+    <h1>🌌 Arcane Empire</h1>
+    <div id="playerInfo">Loading player...</div>
+    <div id="resources">⚪ Silver: 0 | 💰 Gold: 0 | 🏅 VP: 0</div>
+  </header>
 
-  <!-- PLAYER INFO -->
-  <div class="panel">
-    <h2 id="playerName"></h2>
-    <p>💰 Gold: <span id="goldCount">0</span></p>
-    <p>⚪ Silver: <span id="silverCount">0</span></p>
-    <p>⭐ XP: <span id="xpCount">0</span></p>
-    <p>📈 Level: <span id="levelCount">1</span></p>
-    <p>🪙 Amulet: <span id="amuletCount">1</span></p>
-    <p>⚔ Valor: <span id="valorCount">0</span></p>
-  </div>
+  <nav>
+    <button id="btnTraining">🏋 Training</button>
+    <button id="btnBoss">🔥 Boss</button>
+    <button id="btnDungeon">⚔ Dungeon</button>
+    <button id="btnPvP">🤝 PvP Arena</button>
+    <button id="btnShop">🏪 Shop</button>
+    <button id="btnInventory">🎒 Inventory</button>
+    <button id="btnLeaderboard">🏆 Leaderboard</button>
+    <button id="btnOnlinePlayers">🌐 Online Players</button>
+    <button id="btnProfile">👤 Profile</button>
+  </nav>
 
-  <!-- BOSS -->
-  <div class="panel">
-    <h2>🐉 Boss</h2>
-    <div class="bossBarContainer">
-      <div id="bossBar"></div>
-    </div>
-    <button id="fightBtn">Attack Boss</button>
-  </div>
-
-  <!-- TRAIN -->
-  <div class="panel">
-    <button id="trainBtn">🏋 Train</button>
-  </div>
-
-  <!-- PVP -->
-  <div class="panel">
-    <h2>⚔ Arena</h2>
-    <input type="text" id="pvpOpponent" placeholder="Opponent name">
-    <button id="fightPlayerBtn">Fight Player</button>
-    <div id="arenaLog"></div>
-  </div>
-
-  <!-- STORE -->
-  <div class="panel">
-    <h2>🛒 Store</h2>
-
-    <button onclick="buyItem(shopItems.sword)">Steel Sword</button>
-    <button onclick="buyItem(shopItems.axe)">Battle Axe</button>
-    <button onclick="buyItem(shopItems.shield)">Shield</button>
-    <button onclick="buyItem(shopItems.potion)">Potion</button>
-
-    <h3>🎒 Inventory</h3>
-    <div id="inventory"></div>
-  </div>
-
-  <!-- GUILD -->
-  <div class="panel">
-    <h2>👥 Guild</h2>
-    <input type="text" id="guildNameInput" placeholder="Guild name">
-    <button id="createGuildBtn">Create</button>
-    <button id="joinGuildBtn">Join</button>
-    <p id="guildInfo"></p>
-  </div>
-
-  <!-- CHAT -->
-  <div class="panel">
-    <h2>💬 Chat</h2>
-    <div id="chatMessages"></div>
-    <input type="text" id="msg">
-    <button id="sendMsg">Send</button>
-  </div>
-
-  <!-- LEADERBOARD -->
-  <div class="panel">
-    <div id="playerLeaderboard"></div>
-    <div id="guildLeaderboard"></div>
-  </div>
-
-  <!-- EVENT LOG -->
-  <div class="panel">
-    <h2>📜 Events</h2>
-    <div id="eventLog"></div>
-  </div>
-
+  <section id="gameContent"></section>
 </div>
+
+<!-- Panels -->
+<div id="inventoryPanel"></div>
+<div id="runeUpgradePanel"></div>
+<div id="leaderboardPanel"></div>
+<div id="onlinePlayersPanel"></div>
+<div id="playerProfilePanel"></div>
+<div id="adminLoginPanel">
+  <h2>🔑 Admin Login</h2>
+  <input type="text" id="adminUser" placeholder="Username">
+  <input type="password" id="adminPass" placeholder="Password">
+  <button id="adminLoginBtn">Login</button>
+  <div id="adminLoginMsg"></div>
+</div>
+<div id="adminPanel"></div>
 
 <!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="script.js"></script>
 </body>
-  </html>
+</html>
