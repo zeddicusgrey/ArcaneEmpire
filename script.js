@@ -194,7 +194,7 @@ db.ref("chat").on("child_added", s => {
 });
 
 // =====================
-// Guild / Clan
+// Guild
 // =====================
 createGuildBtn.onclick = () => {
   let gName = guildNameInput.value.trim();
