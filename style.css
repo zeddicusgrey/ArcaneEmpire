@@ -4,7 +4,6 @@ body {
   background:#0f172a;
   color:white;
 }
-
 .hidden { display:none; }
 
 #loginScreen {
@@ -17,6 +16,8 @@ input {
   margin:10px auto;
   padding:10px;
   width:200px;
+  border-radius:5px;
+  border:none;
 }
 
 button {
@@ -26,13 +27,17 @@ button {
   border:none;
   color:white;
   border-radius:5px;
+  cursor:pointer;
+  transition: transform 0.1s;
 }
+button:active { transform: scale(0.95); }
 
 .hud {
   background:#020617;
   padding:10px;
   display:flex;
   justify-content:space-between;
+  align-items:center;
 }
 
 .player {
@@ -47,9 +52,33 @@ button {
   margin-right:10px;
 }
 
+#bossBarContainer {
+  width:200px;
+  height:20px;
+  background:#555;
+  border-radius:10px;
+  position:relative;
+}
+
+#bossBar {
+  height:100%;
+  width:100%;
+  background:red;
+  border-radius:10px;
+  transition: width 0.3s;
+}
+
+#bossHPText {
+  position:absolute;
+  top:-20px;
+  left:0;
+  font-size:12px;
+}
+
 .main {
   display:flex;
   flex-wrap:wrap;
+  margin-top:10px;
 }
 
 .panel {
@@ -61,9 +90,7 @@ button {
   border-radius:10px;
 }
 
-.center {
-  flex:2;
-}
+.center { flex:2; }
 
 .chatBox {
   position:fixed;
@@ -76,4 +103,16 @@ button {
 #chatMessages {
   height:100px;
   overflow-y:auto;
+}
+
+.floatingText {
+  position:absolute;
+  color:yellow;
+  font-weight:bold;
+  animation: floatUp 1s forwards;
+}
+
+@keyframes floatUp {
+  0% { opacity:1; transform:translateY(0); }
+  100% { opacity:0; transform:translateY(-50px); }
 }
