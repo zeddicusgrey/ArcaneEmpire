@@ -1,57 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arcane Empire</title>
-<link rel="stylesheet" href="style.css">
-<script type="module" src="script.js"></script>
+  <title>Arcane Empire</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <!-- Login Panel -->
-  <div id="loginPanel">
-    <h2>🔑 Login</h2>
-    <input type="text" id="username" placeholder="Enter username">
-    <button id="loginBtn">Enter World</button>
-    <p id="loginMsg"></p>
-  </div>
+<div id="loginPanel">
+  <h2>Login</h2>
+  <input id="username" placeholder="Enter name">
+  <button onclick="login()">Enter</button>
+  <p id="msg"></p>
+</div>
 
-  <!-- Main Game -->
-  <div id="mainGame" style="display:none;">
-    <div id="topBar">
-      <div id="resources"></div>
-      <div id="playerInfo"></div>
-    </div>
-    <div id="navBar">
-      <button id="btnTraining">Training</button>
-      <button id="btnBoss">Boss</button>
-      <button id="btnDungeon">Dungeon</button>
-      <button id="btnPvP">PvP</button>
-      <button id="btnShop">Shop</button>
-      <button id="btnInventory">Inventory</button>
-      <button id="btnLeaderboard">Leaderboard</button>
-      <button id="btnOnlinePlayers">Online Players</button>
-      <button id="btnProfile">Profile</button>
-    </div>
-    <div id="gameContent"></div>
-  </div>
+<div id="game" style="display:none;">
+  <h2 id="welcome"></h2>
+  <p id="stats"></p>
 
-  <!-- Panels -->
-  <div id="inventoryPanel" class="panel" style="display:none;"></div>
-  <div id="playerProfilePanel" class="panel" style="display:none;"></div>
-  <div id="onlinePlayersPanel" class="panel" style="display:none;"></div>
+  <button onclick="train('attack')">Train Attack</button>
+  <button onclick="train('health')">Train Health</button>
+  <button onclick="train('defense')">Train Defense</button>
 
-  <!-- Admin Login -->
-  <div id="adminLoginPanel">
-    <h2>👑 Admin Login</h2>
-    <input type="text" id="adminUser" placeholder="Admin Username">
-    <input type="password" id="adminPass" placeholder="Password">
-    <button id="adminLoginBtn">Login</button>
-    <p id="adminLoginMsg"></p>
-  </div>
+  <h3>Boss</h3>
+  <img src="https://images.pexels.com/photos/1704481/pexels-photo-1704481.jpeg" width="200">
+  <br>
+  <button onclick="attackBoss()">Attack Boss</button>
 
-  <div id="adminPanel" class="panel" style="display:none;"></div>
+  <p id="log"></p>
+</div>
 
+<!-- Firebase v8 (IMPORTANT) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script src="script.js"></script>
 </body>
-    </html>
+  </html>
