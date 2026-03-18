@@ -6,7 +6,37 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+const pvpOpponent = document.getElementById("pvpOpponent");
+const fightPlayerBtn = document.getElementById("fightPlayerBtn");
+const arenaLog = document.getElementById("arenaLog");
 
+fightPlayerBtn.onclick = ()=>{
+  let oppName = pvpOpponent.value.trim();
+  if(!oppName || oppName === user){ alert("Enter valid opponent"); return; }
+
+  db.ref("players/"+oppName).once("value").then(snap=>{
+    if(!snap.exists()){ alert("Opponent does not exist"); return; }
+    let opp = snap.val();
+
+    db.ref("players/"+user).once("value").then(snap2=>{
+      let me = snap2.val();
+
+      // Simple PvP logic: random winner
+      let winner, loser;
+      if(Math.random() < 0.5){ winner = user; loser = oppName; } else { winner = oppName; loser = user; }
+
+      db.ref("players/"+winner).once("value").then(s=>{
+        let w = s.val();
+        w.gold += 20;
+        w.valor += 10;
+        db.ref("players/"+winner).set(w);
+      });
+
+      arenaLog.innerHTML += `<p>🏹 ${winner} defeated ${loser}! +20 Gold +10 Valor</p>`;
+      arenaLog.scrollTop = arenaLog.scrollHeight;
+    });
+  });
+};
 let user="";
 let bossHP=100;
 const maxBossHP=100;
