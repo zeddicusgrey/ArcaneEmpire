@@ -1,79 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Arcane Empire</title>
-  <link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arcane Empire</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div id="welcome">
-  <h1>🔥 ARCANE EMPIRE 🔥</h1>
-  <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e" class="hero">
-  <button id="startGameBtn">Enter the Empire</button>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <h1>⚔ ARCANE EMPIRE ⚔</h1>
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+  <button id="loginBtn">Enter World</button>
 </div>
 
-<div id="loginForm" class="hidden">
-  <input id="username" placeholder="Enter your name">
-  <button id="loginBtn">Start Adventure</button>
-</div>
-
+<!-- GAME UI -->
 <div id="gameUI" class="hidden">
 
-  <div class="topbar">
-    <h2 id="playerName"></h2>
-    <div class="stats">
-      💰 <span id="goldCount"></span>
-      💎 <span id="diamondCount"></span>
-      ⚔ <span id="valorCount"></span>
+  <!-- TOP HUD -->
+  <div class="hud">
+    <div class="player">
+      <img src="https://i.imgur.com/6VBx3io.png" class="avatar">
+      <div>
+        <h3 id="playerName"></h3>
+        <div>💰 <span id="goldCount"></span> | 💎 <span id="diamondCount"></span> | ⚔ <span id="valorCount"></span></div>
+      </div>
     </div>
   </div>
 
-  <div class="menu">
-    <button class="tabBtn" data-tab="arena">Arena</button>
-    <button class="tabBtn" data-tab="raid">Raid</button>
-    <button class="tabBtn" data-tab="dungeon">Dungeon</button>
-    <button class="tabBtn" data-tab="store">Store</button>
-    <button class="tabBtn" data-tab="chat">Chat</button>
+  <!-- MAIN GRID -->
+  <div class="main">
+
+    <!-- LEFT PANEL -->
+    <div class="panel">
+      <h3>⚔ Actions</h3>
+      <button onclick="fightBoss()">🐉 Boss</button>
+      <button onclick="train()">🏋 Training</button>
+    </div>
+
+    <!-- CENTER -->
+    <div class="panel center">
+      <h2>🌍 World</h2>
+      <p>Explore, fight, grow stronger...</p>
+      <div id="eventLog"></div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="panel">
+      <h3>🛒 Store</h3>
+      <button onclick="buyItem('Sword',50)">Sword (50)</button>
+      <button onclick="buyItem('Armor',80)">Armor (80)</button>
+      <button onclick="buyItem('Potion',20)">Potion (20)</button>
+    </div>
+
   </div>
 
-  <div id="arena" class="tab">
-    <div class="card">
-      <h3>🐉 Dragon Boss</h3>
-      <p id="bossTimer">Loading...</p>
-      <button onclick="addGold(100)">Fight</button>
-    </div>
-  </div>
-
-  <div id="raid" class="tab hidden">
-    <div class="card">
-      <h3>🔥 Fire Raid</h3>
-      <p id="raidTimer">Loading...</p>
-      <button onclick="addGold(70)">Attack</button>
-    </div>
-  </div>
-
-  <div id="dungeon" class="tab hidden">
-    <div class="card">
-      <h3>🏟 Colosseum</h3>
-      <p id="dungeonTimer">Loading...</p>
-      <button onclick="addValor(40)">Enter</button>
-    </div>
-  </div>
-
-  <div id="store" class="tab hidden">
-    <div class="card">
-      <h3>🛒 Shop</h3>
-      <button onclick="buyItem('Sword',50)">⚔ Sword (50)</button>
-      <button onclick="buyItem('Amulet',30)">🔮 Amulet (30)</button>
-    </div>
-  </div>
-
-  <div id="chat" class="tab hidden">
-    <div class="card">
-      <div id="worldChat"></div>
-      <input id="worldMessage">
-      <button id="sendWorldMsg">Send</button>
-    </div>
+  <!-- CHAT -->
+  <div class="chatBox">
+    <div id="chatMessages"></div>
+    <input id="msg" placeholder="Say something...">
+    <button onclick="sendMsg()">Send</button>
   </div>
 
 </div>
@@ -83,4 +71,4 @@
 <script src="script.js"></script>
 
 </body>
-  </html>
+    </html>
