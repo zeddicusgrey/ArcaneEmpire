@@ -1,9 +1,57 @@
-body { font-family: Arial, sans-serif; background:#111; color:#eee; text-align:center; margin:0; padding:0; }
+body {
+  margin:0;
+  font-family: Arial;
+  background: linear-gradient(135deg,#0f172a,#1e293b);
+  color:white;
+  text-align:center;
+}
+
 .hidden { display:none; }
-#welcomeImage { width:80%; max-width:500px; margin:20px auto; }
-button { background:#5c4fff; color:white; border:none; padding:10px 20px; margin:5px; cursor:pointer; }
-button:hover { background:#8371ff; }
-#tabs { margin:10px 0; }
-.tabContent { border-top:1px solid #555; padding:10px; }
-input { padding:8px; margin:5px; width:200px; }
-#playerName h3, #playerInfo p { margin:5px; }
+
+.hero {
+  width:90%;
+  max-width:400px;
+  border-radius:10px;
+  margin:20px 0;
+}
+
+button {
+  background:#6366f1;
+  border:none;
+  padding:12px;
+  margin:5px;
+  border-radius:8px;
+  color:white;
+  font-weight:bold;
+}
+
+button:active {
+  transform:scale(0.95);
+}
+
+.topbar {
+  background:#020617;
+  padding:10px;
+}
+
+.menu {
+  display:flex;
+  justify-content:space-around;
+  background:#020617;
+  padding:10px;
+}
+
+.card {
+  background:#1e293b;
+  margin:15px;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 0 10px rgba(0,0,0,0.5);
+}
+
+input {
+  padding:10px;
+  margin:5px;
+  border-radius:5px;
+  border:none;
+  }
