@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arcane Empire</title>
+<title>Arcane Empire MMORPG</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -27,6 +27,10 @@
         <div>💰 <span id="goldCount"></span> | 💎 <span id="diamondCount"></span> | ⚔ <span id="valorCount"></span></div>
       </div>
     </div>
+    <div id="bossBarContainer">
+      <div id="bossBar"></div>
+      <span id="bossHPText">HP: 100</span>
+    </div>
   </div>
 
   <!-- MAIN GRID -->
@@ -35,8 +39,8 @@
     <!-- LEFT PANEL -->
     <div class="panel">
       <h3>⚔ Actions</h3>
-      <button onclick="fightBoss()">🐉 Boss</button>
-      <button onclick="train()">🏋 Training</button>
+      <button id="fightBtn">🐉 Boss Fight</button>
+      <button id="trainBtn">🏋 Train</button>
     </div>
 
     <!-- CENTER PANEL -->
@@ -59,7 +63,7 @@
   <div class="chatBox">
     <div id="chatMessages"></div>
     <input id="msg" placeholder="Say something...">
-    <button onclick="sendMsg()">Send</button>
+    <button id="sendMsg">Send</button>
   </div>
 
   <!-- ADMIN PANEL -->
@@ -75,4 +79,4 @@
 <script src="script.js"></script>
 
 </body>
-    </html>
+      </html>
