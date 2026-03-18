@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Arcane Empire</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Welcome Screen -->
+  <div id="welcomeScreen">
+    <img src="https://i.ibb.co/7NQpP4k/game-welcome.jpg" id="welcomeImage"/>
+    <button id="startGameBtn">Start Game</button>
+  </div>
+
+  <!-- Login/Register -->
+  <div id="loginForm" class="hidden">
+    <input type="text" id="username" placeholder="Enter username"/>
+    <button id="loginBtn">Login / Register</button>
+  </div>
+
+  <!-- Game UI -->
+  <div id="gameUI" class="hidden">
+    <div id="playerInfo">
+      <h3 id="playerName"></h3>
+      <p>Gold: <span id="goldCount"></span> | Diamonds: <span id="diamondCount"></span> | Valor: <span id="valorCount"></span></p>
+    </div>
+
+    <!-- Tabs -->
+    <div id="tabs">
+      <button class="tabBtn" data-tab="tasksTab">Tasks</button>
+      <button class="tabBtn" data-tab="bossTab">Boss / Arena</button>
+      <button class="tabBtn" data-tab="raidTab">Raid</button>
+      <button class="tabBtn" data-tab="dungeonTab">Dungeon</button>
+      <button class="tabBtn" data-tab="storeTab">Store</button>
+      <button class="tabBtn" data-tab="guildTab">Guild</button>
+      <button class="tabBtn" data-tab="chatTab">World Chat</button>
+      <button class="tabBtn" data-tab="forumTab">Forum</button>
+      <button id="adminTabBtn" class="tabBtn" data-tab="adminTab">Admin</button>
+    </div>
+
+    <!-- Tab Contents -->
+    <div id="tasksTab" class="tabContent hidden"><ul id="taskList"></ul></div>
+    <div id="bossTab" class="tabContent hidden"><ul id="arenaList"></ul></div>
+    <div id="raidTab" class="tabContent hidden"><ul id="raidList"></ul></div>
+    <div id="dungeonTab" class="tabContent hidden"><ul id="dungeonList"></ul></div>
+    <div id="storeTab" class="tabContent hidden">
+      <h4>Weapon Shop</h4><ul id="weaponShop"></ul>
+      <h4>Amulet Shop</h4><ul id="amuletShop"></ul>
+      <h4>Potion Shop</h4><ul id="potionShop"></ul>
+    </div>
+    <div id="guildTab" class="tabContent hidden"><ul id="guildList"></ul></div>
+    <div id="chatTab" class="tabContent hidden">
+      <div id="worldChat"></div>
+      <input type="text" id="worldMessage" placeholder="Message"/>
+      <button id="sendWorldMsg">Send</button>
+    </div>
+    <div id="forumTab" class="tabContent hidden">
+      <div id="forumList"></div>
+      <input type="text" id="forumPost" placeholder="Post message"/>
+      <button id="postForum">Post</button>
+    </div>
+    <div id="adminTab" class="tabContent hidden"><div id="adminControls"></div></div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="script.js"></script>
+</body>
+  </html>
