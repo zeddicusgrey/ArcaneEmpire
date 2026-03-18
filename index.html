@@ -1,70 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>Arcane Empire</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Welcome Screen -->
-  <div id="welcomeScreen">
-    <img src="https://i.ibb.co/7NQpP4k/game-welcome.jpg" id="welcomeImage"/>
-    <button id="startGameBtn">Start Game</button>
+
+<div id="welcome">
+  <h1>🔥 ARCANE EMPIRE 🔥</h1>
+  <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e" class="hero">
+  <button id="startGameBtn">Enter the Empire</button>
+</div>
+
+<div id="loginForm" class="hidden">
+  <input id="username" placeholder="Enter your name">
+  <button id="loginBtn">Start Adventure</button>
+</div>
+
+<div id="gameUI" class="hidden">
+
+  <div class="topbar">
+    <h2 id="playerName"></h2>
+    <div class="stats">
+      💰 <span id="goldCount"></span>
+      💎 <span id="diamondCount"></span>
+      ⚔ <span id="valorCount"></span>
+    </div>
   </div>
 
-  <!-- Login/Register -->
-  <div id="loginForm" class="hidden">
-    <input type="text" id="username" placeholder="Enter username"/>
-    <button id="loginBtn">Login / Register</button>
+  <div class="menu">
+    <button class="tabBtn" data-tab="arena">Arena</button>
+    <button class="tabBtn" data-tab="raid">Raid</button>
+    <button class="tabBtn" data-tab="dungeon">Dungeon</button>
+    <button class="tabBtn" data-tab="store">Store</button>
+    <button class="tabBtn" data-tab="chat">Chat</button>
   </div>
 
-  <!-- Game UI -->
-  <div id="gameUI" class="hidden">
-    <div id="playerInfo">
-      <h3 id="playerName"></h3>
-      <p>Gold: <span id="goldCount"></span> | Diamonds: <span id="diamondCount"></span> | Valor: <span id="valorCount"></span></p>
+  <div id="arena" class="tab">
+    <div class="card">
+      <h3>🐉 Dragon Boss</h3>
+      <p id="bossTimer">Loading...</p>
+      <button onclick="addGold(100)">Fight</button>
     </div>
+  </div>
 
-    <!-- Tabs -->
-    <div id="tabs">
-      <button class="tabBtn" data-tab="tasksTab">Tasks</button>
-      <button class="tabBtn" data-tab="bossTab">Boss / Arena</button>
-      <button class="tabBtn" data-tab="raidTab">Raid</button>
-      <button class="tabBtn" data-tab="dungeonTab">Dungeon</button>
-      <button class="tabBtn" data-tab="storeTab">Store</button>
-      <button class="tabBtn" data-tab="guildTab">Guild</button>
-      <button class="tabBtn" data-tab="chatTab">World Chat</button>
-      <button class="tabBtn" data-tab="forumTab">Forum</button>
-      <button id="adminTabBtn" class="tabBtn" data-tab="adminTab">Admin</button>
+  <div id="raid" class="tab hidden">
+    <div class="card">
+      <h3>🔥 Fire Raid</h3>
+      <p id="raidTimer">Loading...</p>
+      <button onclick="addGold(70)">Attack</button>
     </div>
+  </div>
 
-    <!-- Tab Contents -->
-    <div id="tasksTab" class="tabContent hidden"><ul id="taskList"></ul></div>
-    <div id="bossTab" class="tabContent hidden"><ul id="arenaList"></ul></div>
-    <div id="raidTab" class="tabContent hidden"><ul id="raidList"></ul></div>
-    <div id="dungeonTab" class="tabContent hidden"><ul id="dungeonList"></ul></div>
-    <div id="storeTab" class="tabContent hidden">
-      <h4>Weapon Shop</h4><ul id="weaponShop"></ul>
-      <h4>Amulet Shop</h4><ul id="amuletShop"></ul>
-      <h4>Potion Shop</h4><ul id="potionShop"></ul>
+  <div id="dungeon" class="tab hidden">
+    <div class="card">
+      <h3>🏟 Colosseum</h3>
+      <p id="dungeonTimer">Loading...</p>
+      <button onclick="addValor(40)">Enter</button>
     </div>
-    <div id="guildTab" class="tabContent hidden"><ul id="guildList"></ul></div>
-    <div id="chatTab" class="tabContent hidden">
+  </div>
+
+  <div id="store" class="tab hidden">
+    <div class="card">
+      <h3>🛒 Shop</h3>
+      <button onclick="buyItem('Sword',50)">⚔ Sword (50)</button>
+      <button onclick="buyItem('Amulet',30)">🔮 Amulet (30)</button>
+    </div>
+  </div>
+
+  <div id="chat" class="tab hidden">
+    <div class="card">
       <div id="worldChat"></div>
-      <input type="text" id="worldMessage" placeholder="Message"/>
+      <input id="worldMessage">
       <button id="sendWorldMsg">Send</button>
     </div>
-    <div id="forumTab" class="tabContent hidden">
-      <div id="forumList"></div>
-      <input type="text" id="forumPost" placeholder="Post message"/>
-      <button id="postForum">Post</button>
-    </div>
-    <div id="adminTab" class="tabContent hidden"><div id="adminControls"></div></div>
   </div>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script src="script.js"></script>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="script.js"></script>
+
 </body>
   </html>
