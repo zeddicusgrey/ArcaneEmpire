@@ -1,6 +1,8 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+import { getDatabase, ref, get, set, onDisconnect } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
 document.addEventListener("DOMContentLoaded", function(){
 
-  // --- Firebase Config ---
   const firebaseConfig = {
     apiKey: "AIzaSyAM8jDGhoaPZF3BieIKkMuJtd64PXPOsxw",
     authDomain: "arcaneempire-31.firebaseapp.com",
@@ -10,13 +12,13 @@ document.addEventListener("DOMContentLoaded", function(){
     messagingSenderId: "92082426208",
     appId: "1:92082426208:web:be6e451895cc21a04f8e05"
   };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
 
-  let player=null;
-  const adminCredentials={username:"Zedd",password:"Arcane123"};
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-  // --- Buttons ---
+  let player = null;
+  const adminCredentials = {username:"Zedd", password:"Arcane123"};
+
   const loginBtn = document.getElementById("loginBtn");
   const btnTraining = document.getElementById("btnTraining");
   const btnBoss = document.getElementById("btnBoss");
@@ -29,7 +31,6 @@ document.addEventListener("DOMContentLoaded", function(){
   const btnProfile = document.getElementById("btnProfile");
   const adminLoginBtn = document.getElementById("adminLoginBtn");
 
-  // --- Utility ---
   function log(msg){
     const div=document.createElement("div");
     div.textContent=msg;
@@ -38,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function(){
     let op=0; let intv=setInterval(()=>{op+=0.05; div.style.opacity=op;if(op>=1) clearInterval(intv);},30);
     setTimeout(()=>div.remove(),5000);
   }
+
   function updateResources(p){
     document.getElementById("resources").textContent=
       `⚪ Silver: ${p.silver} | 💰 Gold: ${p.gold} | 🏅 VP: ${p.valor||0}`;
@@ -45,30 +47,35 @@ document.addEventListener("DOMContentLoaded", function(){
       `👤 ${p.username} | Lv:${p.level} | ⚔${p.attack} ❤️${p.health} 🛡${p.defense}`;
   }
 
-  // --- Login ---
-  loginBtn.onclick=()=>{
-    let user=document.getElementById("username").value.trim();
+  // Login
+  loginBtn.onclick = async () => {
+    const user = document.getElementById("username").value.trim();
     if(!user) return document.getElementById("loginMsg").textContent="⚠ Enter username!";
-
-    db.ref("players/"+user).once("value").then(s=>{
-      if(s.exists()) player=s.val();
-      else{
-        player={username:user,level:1,xp:0,silver:500,gold:20,attack:10,defense:10,health:50,runes:[],equippedRune:null,amulet:1,valor:0};
-        db.ref("players/"+user).set(player);
+    try{
+      const playerRef = ref(db, "players/" + user);
+      const snapshot = await get(playerRef);
+      if(snapshot.exists()){
+        player = snapshot.val();
+      } else {
+        player = {username:user, level:1, xp:0, silver:500, gold:20, attack:10, defense:10, health:50, runes:[], equippedRune:null, amulet:1, valor:0};
+        await set(playerRef, player);
       }
       document.getElementById("loginPanel").style.display="none";
       document.getElementById("mainGame").style.display="block";
       updateResources(player);
       showPanel("Training");
-      db.ref("onlinePlayers/"+player.username).set(true);
-      window.addEventListener("beforeunload",()=>{db.ref("onlinePlayers/"+player.username).remove();});
-    }).catch(err=>{
-      console.error(err);
+
+      // mark online
+      const onlineRef = ref(db, "onlinePlayers/" + player.username);
+      await set(onlineRef, true);
+      onDisconnect(onlineRef).remove();
+    } catch(e){
+      console.error(e);
       document.getElementById("loginMsg").textContent="⚠ Error connecting to server!";
-    });
+    }
   };
 
-  // --- Panel Navigation ---
+  // Navigation
   btnTraining.onclick=()=>showPanel("Training");
   btnBoss.onclick=()=>showPanel("Boss");
   btnDungeon.onclick=()=>showPanel("Dungeon");
@@ -97,18 +104,17 @@ document.addEventListener("DOMContentLoaded", function(){
     }
   }
 
-  // --- Training ---
   function displayTraining(){
     const content=document.getElementById("gameContent");
     content.innerHTML="<h3>🏋 Training</h3>";
     ["Attack","Health","Defense"].forEach(attr=>{
       const btn=document.createElement("button");
       btn.textContent=`Train ${attr} (100 Silver)`;
-      btn.onclick=()=>{
+      btn.onclick=async ()=>{
         if(player.silver>=100){
           player.silver-=100;
           player[attr.toLowerCase()]+=10;
-          db.ref("players/"+player.username).set(player);
+          await set(ref(db, "players/"+player.username), player);
           updateResources(player);
           log(`✅ Trained ${attr}! +10`);
         } else log("❌ Not enough Silver!");
@@ -117,13 +123,12 @@ document.addEventListener("DOMContentLoaded", function(){
     });
   }
 
-  // --- Boss ---
   function displayBoss(){
     const content=document.getElementById("gameContent");
     const boss={name:"🔥 Fire Lord",health:200,maxHealth:200,attack:15};
     const img=document.createElement("img");
-    img.src="https://images.pexels.com/photos/1704481/pexels-photo-1704481.jpeg?w=200"; img.className="boss";
-    content.appendChild(img);
+    img.src="https://images.pexels.com/photos/1704481/pexels-photo-1704481.jpeg?w=200";
+    img.className="boss"; content.appendChild(img);
     const healthBarContainer=document.createElement("div"); healthBarContainer.className="healthBarContainer";
     const healthBar=document.createElement("div"); healthBar.className="healthBar"; healthBarContainer.appendChild(healthBar);
     content.appendChild(healthBarContainer);
@@ -136,83 +141,42 @@ document.addEventListener("DOMContentLoaded", function(){
       if(boss.health<=0){
         log(`🎉 You defeated ${boss.name} and earned 50 Silver!`);
         player.silver+=50;
-        db.ref("players/"+player.username).set(player);
+        set(ref(db, "players/"+player.username), player);
         updateResources(player);
-        boss.health=boss.maxHealth;
-        healthBar.style.width="100%";
+        boss.health=boss.maxHealth; healthBar.style.width="100%";
       }
     };
     content.appendChild(attackBtn);
   }
 
-  // --- Inventory ---
   function updateInventory(){
     const panel=document.getElementById("inventoryPanel"); panel.style.display="block";
     panel.innerHTML="<h3>🎒 Inventory</h3>";
     panel.innerHTML+=player.runes.length?player.runes.map(r=>r.name).join(", "):"Empty";
   }
 
-  // --- Profile ---
   function displayProfile(p){
     const panel=document.getElementById("playerProfilePanel"); panel.style.display="block";
     panel.innerHTML=`<h3>${p.username}</h3>
-    <img src="https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?w=200" class="avatar">
-    <p>Level: ${p.level} | XP: ${p.xp}</p>
-    <p>Attack: ${p.attack} | Health: ${p.health} | Defense: ${p.defense}</p>
-    <p>Equipped Amulet: ${p.amulet}</p>
-    <p>Equipped Runes: ${p.runes.map(r=>r.name).join(", ")||"None"}</p>`;
+      <img src="https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?w=200" class="avatar">
+      <p>Level: ${p.level} | XP: ${p.xp}</p>
+      <p>Attack: ${p.attack} | Health: ${p.health} | Defense: ${p.defense}</p>
+      <p>Equipped Amulet: ${p.amulet}</p>
+      <p>Equipped Runes: ${p.runes.map(r=>r.name).join(", ")||"None"}</p>`;
   }
 
-  // --- Online Players ---
   function displayOnlinePlayers(){
     const panel=document.getElementById("onlinePlayersPanel"); panel.style.display="block"; panel.innerHTML="";
-    db.ref("onlinePlayers").once("value").then(s=>{
-      const list=s.val(); for(let u in list){
+    get(ref(db,"onlinePlayers")).then(s=>{
+      const list=s.val(); 
+      for(let u in list){
         const div=document.createElement("div"); div.className="onlinePlayer";
         const img=document.createElement("img"); img.src="https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?w=100"; div.appendChild(img);
         const span=document.createElement("span"); span.textContent=u; div.appendChild(span);
-        div.onclick=()=>{db.ref("players/"+u).once("value").then(snap=>displayProfile(snap.val()));};
+        div.onclick=()=>{get(ref(db,"players/"+u)).then(snap=>displayProfile(snap.val()));};
         panel.appendChild(div);
       }
     });
-  }
-
-  // --- Admin Login ---
-  adminLoginBtn.onclick=()=>{
-    const u=document.getElementById("adminUser").value;
-    const p=document.getElementById("adminPass").value;
-    if(u===adminCredentials.username && p===adminCredentials.password){
-      document.getElementById("adminLoginPanel").style.display="none";
-      document.getElementById("adminPanel").style.display="block";
-      adminLog("✅ Admin logged in!");
-    } else document.getElementById("adminLoginMsg").textContent="❌ Invalid credentials!";
-  };
-  function adminLog(msg){
-    document.getElementById("adminPanel").innerHTML=msg+"<br>"+document.getElementById("adminPanel").innerHTML;
-  }
-
-  // --- Shop Placeholder ---
-  function displayShop(){
-    const content = document.getElementById("gameContent");
-    content.innerHTML = "<h3>🏪 Shop coming soon...</h3>";
-  }
-
-  // --- Dungeon Placeholder ---
-  function displayDungeon(){
-    const content = document.getElementById("gameContent");
-    content.innerHTML = "<h3>⚔ Dungeon coming soon...</h3>";
-  }
-
-  // --- Leaderboard Placeholder ---
-  function displayLeaderboard(){
-    const content = document.getElementById("gameContent");
-    content.innerHTML = "<h3>🏆 Leaderboard coming soon...</h3>";
-  }
-
-  // --- PvP Placeholder ---
-  function displayPvP(){
-    const content = document.getElementById("gameContent");
-    content.innerHTML = "<h3>🤝 PvP Arena coming soon...</h3>";
   }
 
 });
