@@ -1,99 +1,103 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arcane Empire MMORPG</title>
-<link rel="stylesheet" href="style.css">
+  <title>Arcane Empire</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- LOGIN -->
 <div id="loginScreen">
-  <h1>⚔ ARCANE EMPIRE ⚔</h1>
-  <input id="username" placeholder="Username">
-  <input id="password" type="password" placeholder="Password">
+  <h1>Arcane Empire</h1>
+  <input type="text" id="username" placeholder="Username"><br>
+  <input type="password" id="password" placeholder="Password"><br>
   <button id="loginBtn">Enter World</button>
 </div>
 
-<!-- GAME UI -->
+<!-- GAME -->
 <div id="gameUI" class="hidden">
-<div class="panel" id="guildPanel">
-  <h3>🏰 Guild </h3>
-  <div id="guildInfo">Not in a guild</div>
-  <input id="guildNameInput" placeholder="Guild Name">
-  <button id="createGuildBtn">Create Guild</button>
-  <button id="joinGuildBtn">Join Guild</button>
-</div>
-  <div class="panel" id="leaderboardPanel">
-  <h3>🏆 Leaderboards</h3>
-  <div id="playerLeaderboard"><strong>Top Players:</strong></div>
-  <div id="guildLeaderboard"><strong>Top Guilds:</strong></div>
+
+  <!-- PLAYER INFO -->
+  <div class="panel">
+    <h2 id="playerName"></h2>
+    <p>💰 Gold: <span id="goldCount">0</span></p>
+    <p>⚪ Silver: <span id="silverCount">0</span></p>
+    <p>⭐ XP: <span id="xpCount">0</span></p>
+    <p>📈 Level: <span id="levelCount">1</span></p>
+    <p>🪙 Amulet: <span id="amuletCount">1</span></p>
+    <p>⚔ Valor: <span id="valorCount">0</span></p>
   </div>
-  <div class="panel" id="arenaPanel">
-  <h3>⚔ PvP Arena</h3>
-  <input id="pvpOpponent" placeholder="Opponent Username">
-  <button id="fightPlayerBtn">Fight Player</button>
-  <div id="arenaLog"></div>
-    </div>
-  <!-- TOP HUD -->
-  <div class="hud">
-    <div class="player">
-      <img src="https://i.imgur.com/6VBx3io.png" class="avatar">
-      <div>
-        <h3 id="playerName"></h3>
-        <div>💰 <span id="goldCount"></span> | 💎 <span id="diamondCount"></span> | ⚔ <span id="valorCount"></span></div>
-      </div>
-    </div>
-    <div id="bossBarContainer">
+
+  <!-- BOSS -->
+  <div class="panel">
+    <h2>🐉 Boss</h2>
+    <div class="bossBarContainer">
       <div id="bossBar"></div>
-      <span id="bossHPText">HP: 100</span>
     </div>
+    <button id="fightBtn">Attack Boss</button>
   </div>
 
-  <!-- MAIN GRID -->
-  <div class="main">
+  <!-- TRAIN -->
+  <div class="panel">
+    <button id="trainBtn">🏋 Train</button>
+  </div>
 
-    <!-- LEFT PANEL -->
-    <div class="panel">
-      <h3>⚔ Actions</h3>
-      <button id="fightBtn">🐉 Boss Fight</button>
-      <button id="trainBtn">🏋 Train</button>
-    </div>
+  <!-- PVP -->
+  <div class="panel">
+    <h2>⚔ Arena</h2>
+    <input type="text" id="pvpOpponent" placeholder="Opponent name">
+    <button id="fightPlayerBtn">Fight Player</button>
+    <div id="arenaLog"></div>
+  </div>
 
-    <!-- CENTER PANEL -->
-    <div class="panel center">
-      <h2>🌍 World</h2>
-      <div id="eventLog"></div>
-    </div>
+  <!-- STORE -->
+  <div class="panel">
+    <h2>🛒 Store</h2>
 
-    <!-- RIGHT PANEL -->
-    <div class="panel">
-      <h3>🛒 Store</h3>
-      <button onclick="buyItem('Sword',50)">Sword (50)</button>
-      <button onclick="buyItem('Armor',80)">Armor (80)</button>
-      <button onclick="buyItem('Potion',20)">Potion (20)</button>
-    </div>
+    <button onclick="buyItem(shopItems.sword)">Steel Sword</button>
+    <button onclick="buyItem(shopItems.axe)">Battle Axe</button>
+    <button onclick="buyItem(shopItems.shield)">Shield</button>
+    <button onclick="buyItem(shopItems.potion)">Potion</button>
 
+    <h3>🎒 Inventory</h3>
+    <div id="inventory"></div>
+  </div>
+
+  <!-- GUILD -->
+  <div class="panel">
+    <h2>👥 Guild</h2>
+    <input type="text" id="guildNameInput" placeholder="Guild name">
+    <button id="createGuildBtn">Create</button>
+    <button id="joinGuildBtn">Join</button>
+    <p id="guildInfo"></p>
   </div>
 
   <!-- CHAT -->
-  <div class="chatBox">
+  <div class="panel">
+    <h2>💬 Chat</h2>
     <div id="chatMessages"></div>
-    <input id="msg" placeholder="Say something...">
+    <input type="text" id="msg">
     <button id="sendMsg">Send</button>
   </div>
 
-  <!-- ADMIN PANEL -->
-  <div id="admin" class="hidden">
-    <h3>ADMIN PANEL</h3>
-    <div id="adminPanel"></div>
+  <!-- LEADERBOARD -->
+  <div class="panel">
+    <div id="playerLeaderboard"></div>
+    <div id="guildLeaderboard"></div>
+  </div>
+
+  <!-- EVENT LOG -->
+  <div class="panel">
+    <h2>📜 Events</h2>
+    <div id="eventLog"></div>
   </div>
 
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script src="script.js"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
+<script src="script.js"></script>
 </body>
-      </html>
+  </html>
