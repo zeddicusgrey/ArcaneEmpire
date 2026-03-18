@@ -9,7 +9,19 @@ const db = firebase.database();
 const pvpOpponent = document.getElementById("pvpOpponent");
 const fightPlayerBtn = document.getElementById("fightPlayerBtn");
 const arenaLog = document.getElementById("arenaLog");
+const scheduledBossInterval = 10*60*1000; // every 10 minutes
 
+function spawnScheduledBoss(){
+  bossHP = maxBossHP;
+  updateBossBar();
+  log("🔥 A Scheduled Boss has appeared! Fight now!");
+}
+
+// Automatically spawn boss every interval
+setInterval(spawnScheduledBoss, scheduledBossInterval);
+
+// Optional: initial spawn
+spawnScheduledBoss();
 fightPlayerBtn.onclick = ()=>{
   let oppName = pvpOpponent.value.trim();
   if(!oppName || oppName === user){ alert("Enter valid opponent"); return; }
