@@ -104,7 +104,9 @@ button:active { transform: scale(0.95); }
   height:100px;
   overflow-y:auto;
 }
-
+#leaderboardPanel div {
+  margin:5px 0;
+}
 .floatingText {
   position:absolute;
   color:yellow;
