@@ -1,57 +1,79 @@
 body {
   margin:0;
   font-family: Arial;
-  background: linear-gradient(135deg,#0f172a,#1e293b);
+  background:#0f172a;
   color:white;
-  text-align:center;
 }
 
 .hidden { display:none; }
 
-.hero {
-  width:90%;
-  max-width:400px;
-  border-radius:10px;
-  margin:20px 0;
-}
-
-button {
-  background:#6366f1;
-  border:none;
-  padding:12px;
-  margin:5px;
-  border-radius:8px;
-  color:white;
-  font-weight:bold;
-}
-
-button:active {
-  transform:scale(0.95);
-}
-
-.topbar {
-  background:#020617;
-  padding:10px;
-}
-
-.menu {
-  display:flex;
-  justify-content:space-around;
-  background:#020617;
-  padding:10px;
-}
-
-.card {
-  background:#1e293b;
-  margin:15px;
-  padding:15px;
-  border-radius:10px;
-  box-shadow:0 0 10px rgba(0,0,0,0.5);
+#loginScreen {
+  text-align:center;
+  margin-top:100px;
 }
 
 input {
+  display:block;
+  margin:10px auto;
+  padding:10px;
+  width:200px;
+}
+
+button {
   padding:10px;
   margin:5px;
-  border-radius:5px;
+  background:#6366f1;
   border:none;
-  }
+  color:white;
+  border-radius:5px;
+}
+
+.hud {
+  background:#020617;
+  padding:10px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.player {
+  display:flex;
+  align-items:center;
+}
+
+.avatar {
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  margin-right:10px;
+}
+
+.main {
+  display:flex;
+  flex-wrap:wrap;
+}
+
+.panel {
+  flex:1;
+  min-width:120px;
+  background:#1e293b;
+  margin:5px;
+  padding:10px;
+  border-radius:10px;
+}
+
+.center {
+  flex:2;
+}
+
+.chatBox {
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:black;
+  padding:5px;
+}
+
+#chatMessages {
+  height:100px;
+  overflow-y:auto;
+}
