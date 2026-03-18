@@ -5,10 +5,9 @@
 <title>Arcane Empire</title>
 <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<!-- LOGIN SCREEN -->
+<!-- LOGIN -->
 <div id="loginScreen">
   <h1>⚔ ARCANE EMPIRE ⚔</h1>
   <input id="username" placeholder="Username">
@@ -40,10 +39,9 @@
       <button onclick="train()">🏋 Training</button>
     </div>
 
-    <!-- CENTER -->
+    <!-- CENTER PANEL -->
     <div class="panel center">
       <h2>🌍 World</h2>
-      <p>Explore, fight, grow stronger...</p>
       <div id="eventLog"></div>
     </div>
 
@@ -62,6 +60,12 @@
     <div id="chatMessages"></div>
     <input id="msg" placeholder="Say something...">
     <button onclick="sendMsg()">Send</button>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="admin" class="hidden">
+    <h3>ADMIN PANEL</h3>
+    <div id="adminPanel"></div>
   </div>
 
 </div>
