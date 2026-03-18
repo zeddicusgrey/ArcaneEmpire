@@ -10,7 +10,74 @@ const db = firebase.database();
 let user="";
 let bossHP=100;
 const maxBossHP=100;
+const playerLeaderboard = document.getElementById("playerLeaderboard");
+const guildLeaderboard = document.getElementById("guildLeaderboard");
 
+// Load top players by Valor
+function loadPlayerLeaderboard() {
+  db.ref("players").once("value").then(snap=>{
+    let players = [];
+    snap.forEach(p=>{
+      let d=p.val();
+      players.push({name:p.key, valor:d.valor||0, gold:d.gold||0});
+    });
+    players.sort((a,b)=>b.valor - a.valor); // sort by Valor descending
+    playerLeaderboard.innerHTML = "<strong>Top Players:</strong>";
+    players.slice(0,5).forEach((p,i)=>{
+      playerLeaderboard.innerHTML += `<p>${i+1}. ${p.name} ⚔ ${p.valor} | 💰 ${p.gold}</p>`;
+    });
+  });
+}
+
+// Load top guilds by total member Valor
+function loadGuildLeaderboard() {
+  db.ref("guilds").once("value").then(snap=>{
+    let guilds = [];
+    snap.forEach(g=>{
+      let d=g.val();
+      let totalValor = 0;
+      if(d.members) {
+        let promises = d.members.map(m=>{
+          return db.ref("players/"+m+"/valor").once("value").then(snap2=>{
+            totalValor += snap2.val()||0;
+          });
+        });
+        Promise.all(promises).then(()=>{
+          guilds.push({name:g.key, points:totalValor, members:d.members.length});
+          // Sort & display after all guilds processed
+          guilds.sort((a,b)=>b.points - a.points);
+          guildLeaderboard.innerHTML = "<strong>Top Guilds:</strong>";
+          guilds.slice(0,5).forEach((g,i)=>{
+            guildLeaderboard.innerHTML += `<p>${i+1}. ${g.name} 👥${g.members} ⚔${g.points}</p>`;
+          });
+        });
+      }
+    });
+  });
+}
+
+// Call leaderboards on login and refresh
+loginBtn.onclick = async ()=>{
+  /* existing code */
+  loadPlayerLeaderboard();
+  loadGuildLeaderboard();
+};
+
+window.onload = ()=>{
+  /* existing code */
+  if(savedUser){
+    loadPlayerLeaderboard();
+    loadGuildLeaderboard();
+  }
+};
+
+// Optional: refresh every 30 seconds for live updates
+setInterval(()=>{
+  if(user){
+    loadPlayerLeaderboard();
+    loadGuildLeaderboard();
+  }
+}, 30000);
 // AUTO CREATE ADMIN
 db.ref("players/Zedd").once("value").then(s=>{
   if(!s.exists()){
