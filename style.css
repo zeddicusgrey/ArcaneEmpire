@@ -1,80 +1,33 @@
 body{
-  margin:0;
-  font-family: Arial, sans-serif;
-  background: #111;
-  color: #eee;
+  background:#111;
+  color:#fff;
+  font-family:sans-serif;
+  text-align:center;
 }
-#loginPanel, #mainGame, #adminLoginPanel{
-  padding: 20px;
-  text-align: center;
-}
-#topBar{
-  display:flex;
-  justify-content: space-between;
-  padding:10px 20px;
-  background:#222;
-}
-#navBar{
-  display:flex;
-  flex-wrap: wrap;
-  gap:5px;
+
+button{
+  padding:10px;
+  margin:5px;
   background:#333;
-  padding:5px;
-  justify-content: center;
-}
-#navBar button{
-  padding:5px 10px;
-  background:#555;
+  color:#fff;
   border:none;
-  color:#eee;
+  border-radius:5px;
+}
+
+button:hover{
+  background:#555;
   cursor:pointer;
 }
-#navBar button:hover{
-  background:#777;
-}
-#gameContent{
-  padding:10px;
-}
-.panel{
+
+input{
   padding:10px;
   margin:10px;
-  background:#222;
-  border:1px solid #555;
 }
-button{
-  cursor:pointer;
+
+#loginPanel{
+  margin-top:50px;
 }
-img.boss{
-  width:200px;
-  display:block;
-  margin:10px auto;
-}
-.healthBarContainer{
-  width:80%;
-  height:20px;
-  background:#444;
-  margin:10px auto;
-  border-radius:5px;
-}
-.healthBar{
-  height:100%;
-  width:100%;
-  background:red;
-  border-radius:5px;
-}
-.avatar{
-  width:100px;
-  border-radius:50%;
-}
-.onlinePlayer{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:5px;
-  cursor:pointer;
-  border-bottom:1px solid #444;
-}
-.onlinePlayer img{
-  width:50px;
-  border-radius:50%;
+
+#game{
+  margin-top:20px;
 }
